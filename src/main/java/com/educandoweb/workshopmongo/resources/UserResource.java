@@ -38,13 +38,14 @@ public class UserResource {
 		User obj = service.findById(id);
 		return ResponseEntity.ok().body(new UserDto(obj));
 	}
-	
+
 	/**
 	 * 
-	 * Se quizer pode usar o @PostMapping, ao inves do @RequestMapping(method = RequestMethod.POST)
+	 * Se quizer pode usar o @PostMapping, ao inves do @RequestMapping(method =
+	 * RequestMethod.POST)
 	 *
 	 */
-	
+
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@RequestBody UserDto objDto) {
 
@@ -53,11 +54,20 @@ public class UserResource {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
-	
+
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> delete(@PathVariable String id) {
 
 		service.delete(id);
+		return ResponseEntity.noContent().build();
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<Void> update(@RequestBody UserDto objDto, @PathVariable String id) {
+
+		User obj = service.fromDTO(objDto);
+		obj.setId(id);
+		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
 	}
 }
